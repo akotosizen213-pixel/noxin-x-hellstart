@@ -1,0 +1,551 @@
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Cleanup old GUI
+if CoreGui:FindFirstChild("HELLSTAR_X_NOKINZ") then
+    CoreGui:FindFirstChild("HELLSTAR_X_NOKINZ"):Destroy()
+end
+
+-- Main ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "HELLSTAR_X_NOKINZ"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = CoreGui
+
+-- Star Particle Background
+local StarFrame = Instance.new("Frame")
+StarFrame.Name = "StarBackground"
+StarFrame.Size = UDim2.new(1, 0, 1, 0)
+StarFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StarFrame.BackgroundTransparency = 1
+StarFrame.ZIndex = 0
+StarFrame.Parent = ScreenGui
+
+for i = 1, 60 do
+    local star = Instance.new("Frame")
+    star.Size = UDim2.new(0, math.random(1, 3), 0, math.random(1, 3))
+    star.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    star.BackgroundTransparency = math.random(3, 8) / 10
+    star.BorderSizePixel = 0
+    star.ZIndex = 0
+    star.Parent = StarFrame
+    local ui = Instance.new("UICorner")
+    ui.CornerRadius = UDim.new(1, 0)
+    ui.Parent = star
+
+    -- Twinkle animation
+    local tweenIn = TweenService:Create(star, TweenInfo.new(math.random(10, 30) / 10, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {BackgroundTransparency = math.random(1, 4) / 10})
+    tweenIn:Play()
+end
+
+-- Main Window
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 420, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
+MainFrame.BorderSizePixel = 0
+MainFrame.ZIndex = 1
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 6)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(40, 40, 50)
+MainStroke.Thickness = 1
+MainStroke.Parent = MainFrame
+
+-- Star BG inside main frame
+local InnerStarFrame = Instance.new("Frame")
+InnerStarFrame.Size = UDim2.new(1, 0, 1, 0)
+InnerStarFrame.BackgroundTransparency = 1
+InnerStarFrame.ZIndex = 1
+InnerStarFrame.Parent = MainFrame
+
+for i = 1, 40 do
+    local star = Instance.new("Frame")
+    star.Size = UDim2.new(0, math.random(1, 2), 0, math.random(1, 2))
+    star.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    star.BackgroundTransparency = math.random(5, 9) / 10
+    star.BorderSizePixel = 0
+    star.ZIndex = 1
+    star.Parent = InnerStarFrame
+    local ui = Instance.new("UICorner")
+    ui.CornerRadius = UDim.new(1, 0)
+    ui.Parent = star
+end
+
+-- Left Profile Panel
+local LeftPanel = Instance.new("Frame")
+LeftPanel.Name = "LeftPanel"
+LeftPanel.Size = UDim2.new(0, 120, 1, 0)
+LeftPanel.Position = UDim2.new(0, 0, 0, 0)
+LeftPanel.BackgroundColor3 = Color3.fromRGB(8, 8, 14)
+LeftPanel.BorderSizePixel = 0
+LeftPanel.ZIndex = 2
+LeftPanel.Parent = MainFrame
+
+local LeftSeparator = Instance.new("Frame")
+LeftSeparator.Size = UDim2.new(0, 1, 1, 0)
+LeftSeparator.Position = UDim2.new(1, 0, 0, 0)
+LeftSeparator.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+LeftSeparator.BorderSizePixel = 0
+LeftSeparator.ZIndex = 3
+LeftSeparator.Parent = LeftPanel
+
+-- Profile Avatar Placeholder
+local AvatarFrame = Instance.new("Frame")
+AvatarFrame.Size = UDim2.new(0, 52, 0, 52)
+AvatarFrame.Position = UDim2.new(0.5, -26, 0, 18)
+AvatarFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+AvatarFrame.BorderSizePixel = 0
+AvatarFrame.ZIndex = 3
+AvatarFrame.Parent = LeftPanel
+
+local AvatarCorner = Instance.new("UICorner")
+AvatarCorner.CornerRadius = UDim.new(1, 0)
+AvatarCorner.Parent = AvatarFrame
+
+local AvatarStroke = Instance.new("UIStroke")
+AvatarStroke.Color = Color3.fromRGB(60, 60, 80)
+AvatarStroke.Thickness = 1
+AvatarStroke.Parent = AvatarFrame
+
+-- Avatar Icon (textlabel fallback)
+local AvatarIcon = Instance.new("TextLabel")
+AvatarIcon.Size = UDim2.new(1, 0, 1, 0)
+AvatarIcon.BackgroundTransparency = 1
+AvatarIcon.Text = "☆"
+AvatarIcon.TextColor3 = Color3.fromRGB(120, 120, 160)
+AvatarIcon.TextScaled = true
+AvatarIcon.Font = Enum.Font.GothamBold
+AvatarIcon.ZIndex = 4
+AvatarIcon.Parent = AvatarFrame
+
+-- Display Name
+local DisplayName = Instance.new("TextLabel")
+DisplayName.Size = UDim2.new(1, -10, 0, 16)
+DisplayName.Position = UDim2.new(0, 5, 0, 76)
+DisplayName.BackgroundTransparency = 1
+DisplayName.Text = LocalPlayer.DisplayName
+DisplayName.TextColor3 = Color3.fromRGB(220, 220, 220)
+DisplayName.TextScaled = true
+DisplayName.Font = Enum.Font.GothamBold
+DisplayName.ZIndex = 3
+DisplayName.Parent = LeftPanel
+
+local UsernameLabel = Instance.new("TextLabel")
+UsernameLabel.Size = UDim2.new(1, -10, 0, 12)
+UsernameLabel.Position = UDim2.new(0, 5, 0, 95)
+UsernameLabel.BackgroundTransparency = 1
+UsernameLabel.Text = "@" .. LocalPlayer.Name
+UsernameLabel.TextColor3 = Color3.fromRGB(90, 90, 110)
+UsernameLabel.TextScaled = true
+UsernameLabel.Font = Enum.Font.Gotham
+UsernameLabel.ZIndex = 3
+UsernameLabel.Parent = LeftPanel
+
+-- Separator line
+local LineSep = Instance.new("Frame")
+LineSep.Size = UDim2.new(0.8, 0, 0, 1)
+LineSep.Position = UDim2.new(0.1, 0, 0, 116)
+LineSep.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+LineSep.BorderSizePixel = 0
+LineSep.ZIndex = 3
+LineSep.Parent = LeftPanel
+
+-- Social Links
+local links = {
+    "# h1rb x1",
+    "@ discord.gg/hellstar",
+    "@ hellstar_tiktok",
+    "# nokinz_youtube",
+}
+
+for i, lnk in ipairs(links) do
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -10, 0, 11)
+    lbl.Position = UDim2.new(0, 8, 0, 124 + (i - 1) * 16)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = lnk
+    lbl.TextColor3 = Color3.fromRGB(75, 75, 95)
+    lbl.TextScaled = true
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Font = Enum.Font.Gotham
+    lbl.ZIndex = 3
+    lbl.Parent = LeftPanel
+end
+
+-- Right Content Panel
+local RightPanel = Instance.new("Frame")
+RightPanel.Size = UDim2.new(1, -121, 1, 0)
+RightPanel.Position = UDim2.new(0, 121, 0, 0)
+RightPanel.BackgroundTransparency = 1
+RightPanel.ZIndex = 2
+RightPanel.Parent = MainFrame
+
+-- Title: HELLSTAR X NOKINZ
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -10, 0, 22)
+TitleLabel.Position = UDim2.new(0, 8, 0, 8)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "HELLSTAR X NOKINZ"
+TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 255)
+TitleLabel.TextScaled = true
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.ZIndex = 3
+TitleLabel.Parent = RightPanel
+
+-- Tab Bar
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, 0, 0, 24)
+TabBar.Position = UDim2.new(0, 0, 0, 34)
+TabBar.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+TabBar.BorderSizePixel = 0
+TabBar.ZIndex = 3
+TabBar.Parent = RightPanel
+
+local TabLayout = Instance.new("UIListLayout")
+TabLayout.FillDirection = Enum.FillDirection.Horizontal
+TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabLayout.Padding = UDim.new(0, 0)
+TabLayout.Parent = TabBar
+
+local tabNames = {"MAIN MENU", "ROLEPLAY MENU", "ROLEPLAY MENU 2", "ROLEPLAY MENU 3"}
+local tabButtons = {}
+local tabFrames = {}
+local activeTab = nil
+
+-- Content Area
+local ContentArea = Instance.new("Frame")
+ContentArea.Size = UDim2.new(1, 0, 1, -62)
+ContentArea.Position = UDim2.new(0, 0, 0, 62)
+ContentArea.BackgroundTransparency = 1
+ContentArea.ZIndex = 3
+ContentArea.ClipsDescendants = true
+ContentArea.Parent = RightPanel
+
+-- Bottom Bar
+local BottomBar = Instance.new("Frame")
+BottomBar.Size = UDim2.new(1, 0, 0, 22)
+BottomBar.Position = UDim2.new(0, 0, 1, -22)
+BottomBar.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+BottomBar.BorderSizePixel = 0
+BottomBar.ZIndex = 5
+BottomBar.Parent = RightPanel
+
+local BottomTopLine = Instance.new("Frame")
+BottomTopLine.Size = UDim2.new(1, 0, 0, 1)
+BottomTopLine.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+BottomTopLine.BorderSizePixel = 0
+BottomTopLine.ZIndex = 6
+BottomTopLine.Parent = BottomBar
+
+local bottomItems = {"PLAYER LIST", "SETTINGS", "WORLD", "LUA EXECUTOR"}
+local bottomLayout = Instance.new("UIListLayout")
+bottomLayout.FillDirection = Enum.FillDirection.Horizontal
+bottomLayout.SortOrder = Enum.SortOrder.LayoutOrder
+bottomLayout.Padding = UDim.new(0, 0)
+bottomLayout.Parent = BottomBar
+
+for _, name in ipairs(bottomItems) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.25, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(80, 80, 100)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.Gotham
+    btn.ZIndex = 6
+    btn.Parent = BottomBar
+end
+
+-- Feature Commands per tab
+local tabCommands = {
+    ["MAIN MENU"] = {
+        "ANTI SUSPEND (HELLSTAR)",
+        "ANTI SUSPEND FEARLESS ⚡key : novertag (HELLSTAR)",
+        "INFINITE YIELD (HELLSTAR)",
+        "MUSIC EXPLOITS (HELLSTAR)",
+        "ESP PLAYER (HELLSTAR)",
+    },
+    ["ROLEPLAY MENU"] = {
+        "SPEED HACK (NOKINZ)",
+        "INFINITE JUMP (NOKINZ)",
+        "FLY HACK (NOKINZ)",
+        "NOCLIP (NOKINZ)",
+        "BTOOLS (NOKINZ)",
+    },
+    ["ROLEPLAY MENU 2"] = {
+        "GOD MODE (NOKINZ)",
+        "KILL ALL (NOKINZ)",
+        "TELEPORT HUB (NOKINZ)",
+        "FREEZE PLAYERS (NOKINZ)",
+        "CHAT BYPASS (NOKINZ)",
+    },
+    ["ROLEPLAY MENU 3"] = {
+        "RAPID FIRE (HELLSTAR)",
+        "SILENT AIM (HELLSTAR)",
+        "NO RECOIL (HELLSTAR)",
+        "AIMBOT (HELLSTAR)",
+        "TRIGGERBOT (HELLSTAR)",
+    },
+}
+
+-- Feature execution stubs
+local featureActions = {
+    ["ANTI SUSPEND (HELLSTAR)"] = function()
+        -- Anti suspend loop
+        while true do
+            pcall(function()
+                game:GetService("Players").LocalPlayer:Kick()
+            end)
+            wait(30)
+        end
+    end,
+    ["INFINITE YIELD (HELLSTAR)"] = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end,
+    ["ESP PLAYER (HELLSTAR)"] = function()
+        local function addESP(plr)
+            if plr == LocalPlayer then return end
+            local function applyHighlight()
+                local char = plr.Character
+                if not char then return end
+                if char:FindFirstChild("ESPHighlight") then return end
+                local hl = Instance.new("Highlight")
+                hl.Name = "ESPHighlight"
+                hl.FillColor = Color3.fromRGB(255, 0, 0)
+                hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                hl.FillTransparency = 0.5
+                hl.OutlineTransparency = 0
+                hl.Adornee = char
+                hl.Parent = char
+            end
+            applyHighlight()
+            plr.CharacterAdded:Connect(function()
+                wait(0.5)
+                applyHighlight()
+            end)
+        end
+        for _, p in ipairs(Players:GetPlayers()) do addESP(p) end
+        Players.PlayerAdded:Connect(addESP)
+    end,
+    ["SPEED HACK (NOKINZ)"] = function()
+        LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and (LocalPlayer.Character.Humanoid.WalkSpeed = 100)
+    end,
+    ["INFINITE JUMP (NOKINZ)"] = function()
+        LocalPlayer:GetPropertyChangedSignal("Character"):Connect(function()
+            local char = LocalPlayer.Character
+            if char then
+                local hum = char:WaitForChild("Humanoid")
+                game:GetService("UserInputService").JumpRequest:Connect(function()
+                    hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                end)
+            end
+        end)
+    end,
+    ["FLY HACK (NOKINZ)"] = function()
+        local char = LocalPlayer.Character
+        if not char then return end
+        local humanoidRootPart = char:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then return end
+        local bv = Instance.new("BodyVelocity")
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        bv.Parent = humanoidRootPart
+        local flying = true
+        local speed = 50
+        RunService.Heartbeat:Connect(function()
+            if not flying then bv:Destroy() return end
+            local cf = workspace.CurrentCamera.CFrame
+            local dir = Vector3.new(0, 0, 0)
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then dir = dir + cf.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then dir = dir - cf.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then dir = dir - cf.RightVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then dir = dir + cf.RightVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then dir = dir + Vector3.new(0,1,0) end
+            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then dir = dir - Vector3.new(0,1,0) end
+            bv.Velocity = dir * speed
+        end)
+    end,
+    ["NOCLIP (NOKINZ)"] = function()
+        local noclip = false
+        noclip = true
+        RunService.Stepped:Connect(function()
+            if noclip and LocalPlayer.Character then
+                for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end,
+    ["GOD MODE (NOKINZ)"] = function()
+        LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and (LocalPlayer.Character.Humanoid.MaxHealth = math.huge) and (LocalPlayer.Character.Humanoid.Health = math.huge)
+    end,
+}
+
+-- Tab Creation
+local function switchTab(tabName)
+    for _, f in pairs(tabFrames) do f.Visible = false end
+    for _, b in pairs(tabButtons) do
+        b.TextColor3 = Color3.fromRGB(70, 70, 90)
+        b.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+    end
+    if tabFrames[tabName] then tabFrames[tabName].Visible = true end
+    if tabButtons[tabName] then
+        tabButtons[tabName].TextColor3 = Color3.fromRGB(220, 220, 255)
+        tabButtons[tabName].BackgroundColor3 = Color3.fromRGB(18, 18, 28)
+    end
+end
+
+for i, tabName in ipairs(tabNames) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.25, 0, 1, 0)
+    btn.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+    btn.BorderSizePixel = 0
+    btn.Text = tabName
+    btn.TextColor3 = Color3.fromRGB(70, 70, 90)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.Gotham
+    btn.ZIndex = 4
+    btn.LayoutOrder = i
+    btn.Parent = TabBar
+    tabButtons[tabName] = btn
+
+    -- Underline indicator
+    local underline = Instance.new("Frame")
+    underline.Size = UDim2.new(1, 0, 0, 1)
+    underline.Position = UDim2.new(0, 0, 1, -1)
+    underline.BackgroundColor3 = Color3.fromRGB(100, 100, 200)
+    underline.BorderSizePixel = 0
+    underline.ZIndex = 5
+    underline.Visible = (i == 1)
+    underline.Parent = btn
+
+    -- Tab content frame
+    local contentFrame = Instance.new("Frame")
+    contentFrame.Size = UDim2.new(1, 0, 1, 0)
+    contentFrame.BackgroundTransparency = 1
+    contentFrame.Visible = (i == 1)
+    contentFrame.ZIndex = 3
+    contentFrame.Parent = ContentArea
+    tabFrames[tabName] = contentFrame
+
+    -- Commands list
+    local commands = tabCommands[tabName] or {}
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Padding = UDim.new(0, 1)
+    listLayout.Parent = contentFrame
+
+    for j, cmd in ipairs(commands) do
+        local cmdBtn = Instance.new("TextButton")
+        cmdBtn.Size = UDim2.new(1, 0, 0, 34)
+        cmdBtn.BackgroundColor3 = Color3.fromRGB(12, 12, 20)
+        cmdBtn.BorderSizePixel = 0
+        cmdBtn.Text = cmd
+        cmdBtn.TextColor3 = Color3.fromRGB(190, 190, 210)
+        cmdBtn.TextScaled = true
+        cmdBtn.Font = Enum.Font.Gotham
+        cmdBtn.ZIndex = 4
+        cmdBtn.LayoutOrder = j
+        cmdBtn.Parent = contentFrame
+
+        local dot = Instance.new("Frame")
+        dot.Size = UDim2.new(0, 4, 0, 4)
+        dot.Position = UDim2.new(0, 8, 0.5, -2)
+        dot.BackgroundColor3 = Color3.fromRGB(80, 80, 180)
+        dot.BorderSizePixel = 0
+        dot.ZIndex = 5
+        dot.Parent = cmdBtn
+        local dotCorner = Instance.new("UICorner")
+        dotCorner.CornerRadius = UDim.new(1, 0)
+        dotCorner.Parent = dot
+
+        -- Hover effect
+        cmdBtn.MouseEnter:Connect(function()
+            TweenService:Create(cmdBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(20, 20, 35)}):Play()
+            TweenService:Create(dot, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(160, 160, 255)}):Play()
+        end)
+        cmdBtn.MouseLeave:Connect(function()
+            TweenService:Create(cmdBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(12, 12, 20)}):Play()
+            TweenService:Create(dot, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 80, 180)}):Play()
+        end)
+
+        cmdBtn.MouseButton1Click:Connect(function()
+            -- Visual flash
+            TweenService:Create(cmdBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(30, 30, 60)}):Play()
+            wait(0.1)
+            TweenService:Create(cmdBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(12, 12, 20)}):Play()
+
+            -- Execute action
+            if featureActions[cmd] then
+                pcall(featureActions[cmd])
+            end
+        end)
+    end
+
+    btn.MouseButton1Click:Connect(function()
+        for _, ul in pairs(TabBar:GetChildren()) do
+            if ul:IsA("TextButton") then
+                local uline = ul:FindFirstChildOfClass("Frame")
+                if uline then uline.Visible = false end
+                ul.TextColor3 = Color3.fromRGB(70, 70, 90)
+                ul.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+            end
+        end
+        underline.Visible = true
+        switchTab(tabName)
+    end)
+end
+
+switchTab("MAIN MENU")
+
+-- Draggable
+local dragging, dragInput, dragStart, startPos
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Toggle with RightAlt
+UserInputService.InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.RightAlt then
+        MainFrame.Visible = not MainFrame.Visible
+    end
